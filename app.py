@@ -1,6 +1,7 @@
 import numpy as np
 import pandas as pd
 import requests
+import os
 import statsmodels.api as sm
 import math
 import pickle
@@ -14,7 +15,7 @@ app = Flask(__name__)
 
 # Carregando modelo criado
 #model = pickle.load(open('nosso_modelo.pickle', 'rb'))
-token = '7815696ecbf1c96e6894b779456d330e'
+token = os.environ.get('MARVIN_TOKEN')
 ticker = 'BTCUSDT'
 valor_compra_venda = 10
 
@@ -44,7 +45,7 @@ def api_get(route):
     return df
 
 
-def tratamento(df):
+def tratamento(data):
     data['cont'] = range(0,data.shape[0])
     data.rename(columns = {'close':'valor'}, inplace = True)
     data.loc[:,'target_num'] = data['valor'].shift(-1)
@@ -183,8 +184,6 @@ def my_robot(tempo, token):
         count_iter +=1
         time.sleep(60)
 
-
-token = '7815696ecbf1c96e6894b779456d330e'
 
 @app.route("/")
 def index():
